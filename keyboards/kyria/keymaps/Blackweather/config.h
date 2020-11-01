@@ -35,3 +35,7 @@
 // If you are using an Elite C rev3 on the slave side, uncomment the lines below:
 #define SPLIT_USB_DETECT
 #define NO_USB_STARTUP_CHECK
+// This will read the specified pin. If it's high, then the controller assumes it is the left hand, 
+// and if it's low, it's assumed to be the right side.
+//#define SPLIT_HAND_PIN B7
+//#define USE_I2C
