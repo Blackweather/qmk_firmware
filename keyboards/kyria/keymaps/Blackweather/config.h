@@ -39,3 +39,16 @@
 // and if it's low, it's assumed to be the right side.
 //#define SPLIT_HAND_PIN B7
 //#define USE_I2C
+
+// homerow mods setup
+// configure the global tapping term (default: 200 ms)
+#define TAPPING_TERM 200
+
+// prevent normal rollover on alphas from accidentaly triggering mods
+#define IGNORE_MOD_TAP_INTERRUPT
+
+// enable rapid switch from tap to hold, disables tap hold auto-repeat
+#define TAPPING_FORCE_HOLD
+
+// apply the modifier on keys that are tapped during a short hold of a modtap
+#define PERMISSIVE_HOLD
