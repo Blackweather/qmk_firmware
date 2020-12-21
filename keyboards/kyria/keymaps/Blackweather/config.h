@@ -42,7 +42,7 @@
 
 // homerow mods setup
 // configure the global tapping term (default: 200 ms)
-#define TAPPING_TERM 200
+#define TAPPING_TERM 150
 
 // prevent normal rollover on alphas from accidentaly triggering mods
 #define IGNORE_MOD_TAP_INTERRUPT
@@ -51,4 +51,4 @@
 #define TAPPING_FORCE_HOLD
 
 // apply the modifier on keys that are tapped during a short hold of a modtap
-#define PERMISSIVE_HOLD
+//#define PERMISSIVE_HOLD
