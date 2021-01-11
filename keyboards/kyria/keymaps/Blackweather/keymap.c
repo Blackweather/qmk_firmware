@@ -28,7 +28,12 @@ enum layers {
 
 enum custom_keycodes {
     QWERTY = SAFE_RANGE,
-    CMAKDH
+    CMAKDH,
+    REDO,
+    PASTE,
+    COPY,
+    CUT,
+    UNDO
 };
 
 bool is_qwerty_active = false;
@@ -45,17 +50,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |XXXXXXX | GUI/A| Alt/R|Ctrl/S|LSft/T|   G  |                              |   M  |LSft/N|Ctrl/E| Alt/I| GUI/O|  XXX   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | XXXXXX |   Z  |RAlt/X|   C  |   D  |   V  |XXXXXX|XXXXXX|  |  XXX |XXXXXX|   K  |   H  | ,  < |RAlt.>| /  ? |  XXX   |
+ * | XXXXXX |   Z  |ALGR/X|   C  |   D  |   V  |XXXXXX|XXXXXX|  |  XXX |XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  XXX   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        | GUI  | Esc  | Space| Tab  | XXX  |  | XXXXX| Enter| Bksp |Delete| Mute |
  *                        |      | Media| Nav  | Mouse| XXXXX|  | XXXXX| Sym  | Num |  Fn  |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_COLEMAK_DHM] = LAYOUT(
-      KC_ENT, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, KC_ENT,
-      KC_ENT, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), KC_ENT,
-      KC_LSFT, KC_Z, MT(KC_RALT, KC_X), KC_C, KC_D, KC_V, KC_LSFT, KC_LSFT, KC_ENT, KC_LSFT, KC_K, KC_H, KC_COMM, MT(KC_RALT, KC_DOT), KC_SLSH, KC_ENT,
-      KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_SPC), LT(_MOUSE, KC_TAB), KC_ENT, KC_ENT, LT(_SYM, KC_ENT), LT(_NUM, KC_BSPC), LT(_FUNC, KC_DEL), KC_MUTE
+      KC_NO, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, KC_NO,
+      KC_NO, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), KC_NO,
+      KC_LSFT, KC_Z, MT(KC_ALGR, KC_X), KC_C, KC_D, KC_V, KC_LSFT, KC_LSFT, KC_NO, KC_LSFT, KC_K, KC_H, KC_COMM, MT(KC_ALGR, KC_DOT), KC_SLSH, KC_NO,
+      KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_SPC), LT(_MOUSE, KC_TAB), KC_NO, KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_BSPC), LT(_FUNC, KC_DEL), KC_MUTE
     ),
 
 /*
@@ -76,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //   KC_ESC,    KC_Q, KC_W, KC_E, KC_R, KC_T,                                     KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_PIPE,
     //   MT(MOD_LCTL, KC_BSPC), KC_A, KC_S, KC_D, KC_F, KC_G,                                     KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_QUOT,
     //   KC_LSFT,               KC_Z, KC_X, KC_C, KC_V, KC_B, KC_LSFT, KC_LSFT, KC_TAB, KC_LSFT,  KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_MINS,
-    //                         KC_LGUI, KC_DEL, MT(MOD_LALT, KC_SPC), LT(_LOWER, KC_ENT), LT(_RAISE, KC_ESC), LT(_LOWER, KC_ENT), LT(_RAISE, KC_SPC), KC_RALT, KC_BSPC, KC_MUTE
+    //                         KC_LGUI, KC_DEL, MT(MOD_LALT, KC_SPC), LT(_LOWER, KC_ENT), LT(_RAISE, KC_ESC), LT(_LOWER, KC_ENT), LT(_RAISE, KC_SPC), KC_ALGR, KC_BSPC, KC_MUTE
     // ),
 
 /*
@@ -95,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
      [_NAV] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_AGIN, KC_PSTE, KC_COPY, KC_CUT, KC_UNDO, _______,
+      _______, _______, _______, _______, _______, _______,                                     REDO, PASTE, COPY, CUT, UNDO, _______,
       _______, _______, _______, _______, _______, _______,                                     KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______,
                                  _______, _______, _______, _______, _______, _______, KC_ENT, KC_BSPC, KC_DEL, _______
@@ -303,26 +308,56 @@ static void render_status(void) {
 }
 
 // disabled for now since there is no QWERTY
-// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case QWERTY:
-//             if (record->event.pressed) {
-//                 set_single_persistent_default_layer(_QWERTY);
-//                 is_qwerty_active = true;
-//             }
-//             return false;
-//             break;
-//         case CMAKDH:
-//             if (record->event.pressed) {
-//                 set_single_persistent_default_layer(_COLEMAK_DHM);
-//                 is_qwerty_active = false;
-//             }
-//             return false;
-//         default:
-//             break;
-//     }
-//     return true;
-// };
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        // case QWERTY:
+        //     if (record->event.pressed) {
+        //         set_single_persistent_default_layer(_QWERTY);
+        //         is_qwerty_active = true;
+        //     }
+        //     return false;
+        //     break;
+        // case CMAKDH:
+        //     if (record->event.pressed) {
+        //         set_single_persistent_default_layer(_COLEMAK_DHM);
+        //         is_qwerty_active = false;
+        //     }
+        //     return false;
+        case REDO:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("y"));
+            }
+            return false;
+            break;
+        case PASTE:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("v"));
+            }
+            return false;
+            break;
+        case COPY:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("c"));
+            }
+            return false;
+            break;
+        case CUT:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("x"));
+            }
+            return false;
+            break;
+        case UNDO:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("z"));
+            }
+            return false;
+            break;
+        default:
+            break;
+    }
+    return true;
+};
 
 void oled_task_user(void) {
     if (is_keyboard_master()) {
