@@ -17,17 +17,18 @@
 
 enum layers {
     _COLEMAK_DHM = 0,
-    //_QWERTY,
+    _GAME,
     _NAV,
     _MOUSE,
     _MEDIA,
     _NUM,
+    _NUMT,
     _SYM,
     _FUNC
 };
 
 enum custom_keycodes {
-    QWERTY = SAFE_RANGE,
+    GAME = SAFE_RANGE,
     CMAKDH,
     REDO,
     PASTE,
@@ -36,7 +37,7 @@ enum custom_keycodes {
     UNDO
 };
 
-bool is_qwerty_active = false;
+bool is_game_active = false;
 
 bool is_alt_tab_active = false;
 uint16_t alt_tab_timer = 0;
@@ -50,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |XXXXXXX | GUI/A| Alt/R|Ctrl/S|LSft/T|   G  |                              |   M  |LSft/N|Ctrl/E| Alt/I| GUI/O|  XXX   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | XXXXXX |   Z  |ALGR/X|   C  |   D  |   V  |XXXXXX|XXXXXX|  |  XXX |XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  XXX   |
+ * | LShift |   Z  |ALGR/X|   C  |   D  |   V  |XXXXXX| GAME |  |  XXX |XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  XXX   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        | GUI  | Esc  | Space| Tab  | XXX  |  | XXXXX| Enter| Bksp |Delete| Mute |
  *                        |      | Media| Nav  | Mouse| XXXXX|  | XXXXX| Sym  | Num |  Fn  |      |
@@ -59,30 +60,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DHM] = LAYOUT(
       KC_NO, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, KC_NO,
       KC_NO, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), KC_NO,
-      KC_LSFT, KC_Z, MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, KC_LSFT, KC_LSFT, KC_NO, KC_LSFT, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, KC_NO,
+      KC_LSFT, KC_Z, MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, KC_NO, GAME, KC_NO, KC_NO, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, KC_NO,
       KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_SPC), LT(_MOUSE, KC_TAB), KC_NO, KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_BSPC), LT(_FUNC, KC_DEL), KC_MUTE
     ),
 
 /*
- * Alternative layout: QWERTY - disabled for now
+ * Gaming layout: GAME
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * | ESC    |   Q  |   W  |   E  |   R  |  T   |                              |   Y  |   U  |   I  |   O  |   P  |  |  \  |
+ * | XXX    |  Esc  |  Q  |   W  |   E  |  R   |                              |   T  |   Y  |   U  |   I  |   O  |  XXXX  |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |Ctrl/BS |   A  | S    |  D   |  F   |  G   |                              |   H  |   J  |  K   |   L  |   ;  |  ' "   |
+ * |  Nav   |LShift|   A  |   S  |  D   |  F   |                              |   G  |   H  |  J   |   K  |   L  |  XXXX  |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   V  |  B   |LShift|LShift|  |  Tab |LShift|   N  |   M  |  , < |  . > |  / ? |  - _   |
+ * | XXXXXX |LCtrl |   Z  |   X  |   C  |  V   |XXXXXX|CMAKDH|  |  XXX |XXXXXX|   B  |   N  |  M   |  , < |   P  |  XXX   |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |  GUI | Del  | Space| Enter| Esc  |  | Enter| Space| AltGr| Bksp | Mute |
- *                        |      |      | Alt  | Lower| Raise|  | Lower| Raise|      |      |      |
+ *                        |  GUI | Alt  | Space| NUMT | Esc  |  | Enter| Bksp | Sym | /?    | Mute |
  *                        `----------------------------------'  `----------------------------------'
  */
-    // [_QWERTY] = LAYOUT(
-    //   KC_ESC,    KC_Q, KC_W, KC_E, KC_R, KC_T,                                     KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_PIPE,
-    //   MT(MOD_LCTL, KC_BSPC), KC_A, KC_S, KC_D, KC_F, KC_G,                                     KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_QUOT,
-    //   KC_LSFT,               KC_Z, KC_X, KC_C, KC_V, KC_B, KC_LSFT, KC_LSFT, KC_TAB, KC_LSFT,  KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_MINS,
-    //                         KC_LGUI, KC_DEL, MT(MOD_LALT, KC_SPC), LT(_LOWER, KC_ENT), LT(_RAISE, KC_ESC), LT(_LOWER, KC_ENT), LT(_RAISE, KC_SPC), MOD_RALT, KC_BSPC, KC_MUTE
-    // ),
+    [_GAME] = LAYOUT(
+      _______,  KC_ESC,  KC_Q, KC_W,    KC_E,    KC_R,                                       KC_T, KC_Y, KC_U, KC_I, KC_O, _______,
+      MO(_NAV), KC_LSFT, KC_A, KC_S,    KC_D,    KC_F,                                       KC_G, KC_H, KC_J, KC_K, KC_L, _______,
+      _______,  KC_LCTL, KC_Z, KC_X,    KC_C,    KC_V,   _______, CMAKDH,  _______, _______, KC_B, KC_N, KC_M, KC_COMM, KC_P, _______,
+                              KC_LGUI, KC_LALT, KC_SPC,  MO(_NUMT), KC_ESC, KC_ENT, KC_BSPC, MO(_SYM), KC_SLSH, KC_MUTE
+    ),
 
 /*
  * Navigation Layer
@@ -95,7 +95,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |        |      |      |      |      |      |      |      |  |      |      |Insert| Home | PgDn | PgUp | End  |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      | Enter| Bksp |Delete|      |
- *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
 
@@ -117,7 +116,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * |        |      |      |      |      |      |      |      |  |      |      |      |ScLeft|ScDown|ScUp  |ScRght|        |
 //  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
 //  *                        |      |      |      |      |      |  |      | LMB  | RMB  | MMB  |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
 //  *                        `----------------------------------'  `----------------------------------'
 //  */
     [_MOUSE] = LAYOUT(
@@ -138,7 +136,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * |        |      |      |      |      |      |      |      |  |      |      |      | VAI  | VAD  |  MOD | RMOD |        |
 //  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
 //  *                        |      |      |      |      |      |  |      | Stop | Pause|      |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
 //  *                        `----------------------------------'  `----------------------------------'
 //  */
     [_MEDIA] = LAYOUT(
@@ -159,7 +156,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * |        |  `   |   1  |   2  |   3  |   \  |      |      |  |      |      |      |      |      |      |      |        |
 //  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
 //  *                        |      |   .  |   0  |   -  |      |  |      |      |      |      |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
 //  *                        `----------------------------------'  `----------------------------------'
 //  */
     [_NUM] = LAYOUT(
@@ -167,6 +163,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, KC_SCLN, KC_4, KC_5, KC_6, KC_EQL,                                     _______, _______, _______, _______, _______, _______,
       _______, KC_GRV, KC_1, KC_2, KC_3, KC_BSLS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                 _______, KC_DOT, KC_0, KC_MINS,  _______, _______, _______, _______, _______, _______
+    ),
+
+// /*
+//  * Top Number layer
+//  *
+//  * ,-------------------------------------------.                              ,-------------------------------------------.
+//  * |        |   1  |   2  |   3  |   4  |  5   |                              |   6  |  7   |   8  |   9  |   0  |        |
+//  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+//  * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
+//  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+//  * |        |      |      |      |      |      |      |      |  |      |      |      |      |      |      |      |        |
+//  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+//  *                        |      |      |      |      |      |  |      |      |      |      |      |
+//  *                        `----------------------------------'  `----------------------------------'
+//  */
+    [_NUMT] = LAYOUT(
+      _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
+      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
 // /*
@@ -180,7 +196,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * |        |   ~  |   !  |   @  |   #  |   |  |      |      |  |      |      |      |      |      |      |      |        |
 //  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
 //  *                        |      |   (  |   )  |   _  |      |  |      |      |      |      |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
 //  *                        `----------------------------------'  `----------------------------------'
 //  */
     [_SYM] = LAYOUT(
@@ -201,7 +216,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  * |        |  F10 |  F1  |  F2  |  F3  |PauseB|      |      |  |      |      |      |      |      |      |      |        |
 //  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
 //  *                        |      | Menu | Spc  |  Tab |      |  |      |      |      |      |      |
-//  *                        |      |      |      |      |      |  |      |      |      |      |      |
 //  *                        `----------------------------------'  `----------------------------------'
 //  */
     [_FUNC] = LAYOUT(
@@ -271,8 +285,8 @@ static void render_status(void) {
     oled_write_P(PSTR("Layer: "), false);
     switch (get_highest_layer(layer_state)) {
         case _COLEMAK_DHM:
-            if (is_qwerty_active) {
-                oled_write_P(PSTR("QWERTY\n"), false);
+            if (is_game_active) {
+                oled_write_P(PSTR("Game\n"), false);
             } else {
                 oled_write_P(PSTR("Colemak-DHm\n"), false);
             }
@@ -288,6 +302,9 @@ static void render_status(void) {
             break;
         case _NUM:
             oled_write_P(PSTR("Number\n"), false);
+            break;
+        case _NUMT:
+            oled_write_P(PSTR("NumberT\n"), false);
             break;
         case _SYM:
             oled_write_P(PSTR("Symbols\n"), false);
@@ -310,19 +327,19 @@ static void render_status(void) {
 // disabled for now since there is no QWERTY
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        // case QWERTY:
-        //     if (record->event.pressed) {
-        //         set_single_persistent_default_layer(_QWERTY);
-        //         is_qwerty_active = true;
-        //     }
-        //     return false;
-        //     break;
-        // case CMAKDH:
-        //     if (record->event.pressed) {
-        //         set_single_persistent_default_layer(_COLEMAK_DHM);
-        //         is_qwerty_active = false;
-        //     }
-        //     return false;
+        case GAME:
+            if (record->event.pressed) {
+                set_single_persistent_default_layer(_GAME);
+                is_game_active = true;
+            }
+            return false;
+            break;
+        case CMAKDH:
+            if (record->event.pressed) {
+                set_single_persistent_default_layer(_COLEMAK_DHM);
+                is_game_active = false;
+            }
+            return false;
         case REDO:
             if (record->event.pressed) {
                 SEND_STRING(SS_LCTL("y"));
@@ -372,12 +389,24 @@ void oled_task_user(void) {
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (index == 0) {
-        // Volume control
-        if (!clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
+        if (is_game_active) {
+            // weapon switch
+            if (!clockwise) {
+                    tap_code(KC_WH_D);
+                } 
+                else {
+                    tap_code(KC_WH_U);
+                }
+        } 
+        else {
+            // Volume control
+            if (!clockwise) {
+                    tap_code(KC_VOLU);
+                } 
+                else {
+                    tap_code(KC_VOLD);
+                }
+        }         
     }
     else if (index == 1) {
         /*
