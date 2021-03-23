@@ -30,11 +30,18 @@ enum layers {
 enum custom_keycodes {
     GAME = SAFE_RANGE,
     CMAKDH,
-    REDO,
-    PASTE,
-    COPY,
-    CUT,
-    UNDO
+    CHRM,
+    FFX
+};
+
+// Tap Dance declarations
+enum {
+    TD_CHRM_FFX,
+};
+
+// Tap Dance definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_CHRM_FFX] = ACTION_TAP_DANCE_DOUBLE(CHRM, FFX),
 };
 
 bool is_game_active = false;
@@ -47,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Base Layer: COLEMAK_DHM GACS
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |XXXXXXXX|   Q  |   W  |   F  |   P  |   B  |                              |   J  |   L  |   U  |   Y  | ' "  |  XXX   |
+ * |Chrm/Ffx|   Q  |   W  |   F  |   P  |   B  |                              |   J  |   L  |   U  |   Y  | ' "  |  XXX   |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |XXXXXXX | GUI/A| Alt/R|Ctrl/S|LSft/T|   G  |                              |   M  |LSft/N|Ctrl/E| Alt/I| GUI/O|  XXX   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
@@ -58,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_COLEMAK_DHM] = LAYOUT(
-      KC_NO, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, KC_NO,
+      TD(TD_CHRM_FFX), KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, KC_NO,
       KC_NO, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), KC_NO,
       KC_LSFT, KC_Z, MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, KC_NO, GAME, KC_NO, KC_NO, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, KC_NO,
       KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_SPC), LT(_MOUSE, KC_TAB), KC_NO, KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_BSPC), LT(_FUNC, KC_DEL), KC_MUTE
@@ -88,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Navigation Layer
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |      |      |      |                              | Redo | Paste| Copy | Cut  | Undo |        |
+ * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |        |      |      |      |      |      |                              | Caps | Left | Down |  Up  | Right|        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
@@ -99,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
      [_NAV] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     REDO, PASTE, COPY, CUT, UNDO, _______,
+      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______,                                     KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______,
                                  _______, _______, _______, _______, _______, _______, KC_ENT, KC_BSPC, KC_DEL, _______
@@ -324,7 +331,6 @@ static void render_status(void) {
     oled_write_P(PSTR("Have a nice day!    "), false);
 }
 
-// disabled for now since there is no QWERTY
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case GAME:
@@ -333,43 +339,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 is_game_active = true;
             }
             return false;
-            break;
         case CMAKDH:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_COLEMAK_DHM);
                 is_game_active = false;
             }
             return false;
-        case REDO:
+        case CHRM:
             if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("y"));
+                SEND_STRING(SS_TAP(X_LGUI)"chrome"SS_DELAY(500)SS_TAP(X_ENT));
             }
             return false;
-            break;
-        case PASTE:
+        case FFX:
             if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("v"));
+                SEND_STRING(SS_TAP(X_LGUI)"firefox"SS_DELAY(500)SS_TAP(X_ENT));
             }
             return false;
-            break;
-        case COPY:
-            if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("c"));
-            }
-            return false;
-            break;
-        case CUT:
-            if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("x"));
-            }
-            return false;
-            break;
-        case UNDO:
-            if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("z"));
-            }
-            return false;
-            break;
         default:
             break;
     }
@@ -439,11 +424,9 @@ void encoder_update_user(uint8_t index, bool clockwise) {
                 break;
             default:
                 if (!clockwise) {
-                    tap_code(KC_DOWN);
-                    tap_code(KC_DOWN);
+                    tap_code(KC_WH_D);
                 } else {
-                    tap_code(KC_UP);
-                    tap_code(KC_UP);
+                    tap_code(KC_WH_U);
                 }
                 break;
         }
