@@ -30,8 +30,11 @@ enum layers {
 enum custom_keycodes {
     GAME = SAFE_RANGE,
     CMAKDH,
-    CHRM,
-    FFX
+    DSCRD,
+    GMAIL,
+    MSNGR,
+    SLCK,
+    OUTLK
 };
 
 // Tap Dance declarations
@@ -39,9 +42,17 @@ enum {
     TD_CHRM_FFX,
 };
 
+void browser_dance_finished(qk_tap_dance_state_t* state, void* user_data) {
+    if (state->count == 1) {
+        SEND_STRING(SS_TAP(X_LGUI)SS_DELAY(700)"chrome"SS_DELAY(500)SS_TAP(X_ENT));
+    } else if (state->count == 2) {
+        SEND_STRING(SS_TAP(X_LGUI)SS_DELAY(700)"firefox"SS_DELAY(500)SS_TAP(X_ENT));
+    }
+}
+
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_CHRM_FFX] = ACTION_TAP_DANCE_DOUBLE(CHRM, FFX),
+    [TD_CHRM_FFX] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, browser_dance_finished, NULL),
 };
 
 bool is_game_active = false;
@@ -54,11 +65,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Base Layer: COLEMAK_DHM GACS
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |Chrm/Ffx|   Q  |   W  |   F  |   P  |   B  |                              |   J  |   L  |   U  |   Y  | ' "  |  XXX   |
+ * |Chrm/Ffx|   Q  |   W  |   F  |   P  |   B  |                              |   J  |   L  |   U  |   Y  | ' "  |  XXXX  |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |XXXXXXX | GUI/A| Alt/R|Ctrl/S|LSft/T|   G  |                              |   M  |LSft/N|Ctrl/E| Alt/I| GUI/O|  XXX   |
+ * | GMAIL | GUI/A| Alt/R|Ctrl/S|LSft/T|   G  |                              |   M  |LSft/N|Ctrl/E| Alt/I| GUI/O|  Slck  |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |ALGR/X|   C  |   D  |   V  |XXXXXX| GAME |  |  XXX |XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  XXX   |
+ * | MSNGR |   Z  |ALGR/X|   C  |   D  |   V  | Dscrd| GAME |  |  XXX |XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  Outlk  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        | GUI  | Esc  | Space| Tab  | XXX  |  | XXXXX| Enter| Bksp |Delete| Mute |
  *                        |      | Media| Nav  | Mouse| XXXXX|  | XXXXX| Sym  | Num |  Fn  |      |
@@ -66,8 +77,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_COLEMAK_DHM] = LAYOUT(
       TD(TD_CHRM_FFX), KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, KC_NO,
-      KC_NO, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), KC_NO,
-      KC_LSFT, KC_Z, MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, KC_NO, GAME, KC_NO, KC_NO, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, KC_NO,
+      GMAIL, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), SLCK,
+      MSNGR, KC_Z, MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, DSCRD, GAME, KC_NO, KC_NO, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, OUTLK,
       KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_SPC), LT(_MOUSE, KC_TAB), KC_NO, KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_BSPC), LT(_FUNC, KC_DEL), KC_MUTE
     ),
 
@@ -345,14 +356,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 is_game_active = false;
             }
             return false;
-        case CHRM:
+        case DSCRD:
             if (record->event.pressed) {
-                SEND_STRING(SS_TAP(X_LGUI)"chrome"SS_DELAY(500)SS_TAP(X_ENT));
+                SEND_STRING(SS_TAP(X_LGUI)SS_DELAY(700)"discord"SS_DELAY(500)SS_TAP(X_ENT));
             }
             return false;
-        case FFX:
+        case GMAIL:
             if (record->event.pressed) {
-                SEND_STRING(SS_TAP(X_LGUI)"firefox"SS_DELAY(500)SS_TAP(X_ENT));
+                SEND_STRING(SS_LCTL("t")"gmail.com"SS_TAP(X_ENT));
+            }
+            return false;
+        case MSNGR:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("t")"messenger.com"SS_TAP(X_ENT));
+            }
+            return false;
+        case SLCK:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_LGUI)SS_DELAY(700)"slack"SS_DELAY(500)SS_TAP(X_ENT));
+            }
+            return false;
+        case OUTLK:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_LGUI)SS_DELAY(700)"outlook"SS_DELAY(500)SS_TAP(X_ENT));
             }
             return false;
         default:
