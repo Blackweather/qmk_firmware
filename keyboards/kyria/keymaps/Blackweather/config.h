@@ -16,6 +16,18 @@
 
 #pragma once
 
+// remove console when not debugging
+#ifndef NO_DEBUG
+#define NO_DEBUG
+#endif // !NO_DEBUG
+#if !defined(NO_PRINT) && !defined(CONSOLE_ENABLE)
+#define NO_PRINT
+#endif // !NO_PRINT
+
+// remove unused features
+#define NO_ACTION_ONESHOT
+#define DISABLE_LEADER
+
 // EC11K encoders have a different resolution than other EC11 encoders.
 // When using the default resolution of 4, if you notice your encoder skipping
 // every other tick, lower the resolution to 2.
@@ -50,5 +62,4 @@
 // enable rapid switch from tap to hold, disables tap hold auto-repeat
 #define TAPPING_FORCE_HOLD
 
-// apply the modifier on keys that are tapped during a short hold of a modtap
-//#define PERMISSIVE_HOLD
+#define COMBO_COUNT 5
