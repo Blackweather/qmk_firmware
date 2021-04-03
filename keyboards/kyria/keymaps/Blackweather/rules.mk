@@ -4,3 +4,7 @@ RGBLIGHT_ENABLE = yes      # Enable keyboard RGB underglow
 EXTRAKEY_ENABLE = yes
 TAP_DANCE_ENABLE = yes
 COMBO_ENABLE = yes
+MOUSEKEY_ENABLE = yes
+MAGIC_ENABLE = no
+SPACE_CADET_ENABLE = no
+GRAVE_ESC_ENABLE = no

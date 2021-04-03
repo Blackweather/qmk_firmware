@@ -27,6 +27,9 @@
 // remove unused features
 #define NO_ACTION_ONESHOT
 #define DISABLE_LEADER
+#define LAYER_STATE_16BIT
+#undef LOCKING_SUPPORT_ENABLE
+#undef LOCKING_RESYNC_ENABLE
 
 // EC11K encoders have a different resolution than other EC11 encoders.
 // When using the default resolution of 4, if you notice your encoder skipping
