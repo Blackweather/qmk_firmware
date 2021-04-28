@@ -18,6 +18,7 @@
 enum layers {
     _COLEMAK_DHM = 0,
     _GAME,
+    _RSTHD,
     _NAV,
     _MOUSE,
     _MEDIA,
@@ -29,6 +30,7 @@ enum layers {
 
 enum custom_keycodes {
     GAME = SAFE_RANGE,
+    RSTHD,
     CMAKDH,
     DSCRD,
     GMAIL,
@@ -75,48 +77,19 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 // combos
 enum combo_events {
     PB_LPRN,
-    JL_RPRN,
-    KCOMM_DESCRIBE,
-    KH_CONFIG,
-    KSLSH_CONTEXT
+    JL_RPRN
 };
 
 const uint16_t PROGMEM pb_combo[] = {KC_P, KC_B, COMBO_END};
 const uint16_t PROGMEM jl_combo[] = {KC_J, KC_L, COMBO_END};
 
-const uint16_t PROGMEM kcomm_combo[] = {KC_K, KC_COMM, COMBO_END};
-const uint16_t PROGMEM kh_combo[] = {KC_K, KC_H, COMBO_END};
-const uint16_t PROGMEM kslsh_combo[] = {KC_K, KC_SLSH, COMBO_END};
-
 combo_t key_combos[COMBO_COUNT] = {
     [PB_LPRN] = COMBO(pb_combo, KC_LPRN),
-    [JL_RPRN] = COMBO(jl_combo, KC_RPRN),
-    [KCOMM_DESCRIBE] = COMBO_ACTION(kcomm_combo),
-    [KH_CONFIG] = COMBO_ACTION(kh_combo),
-    [KSLSH_CONTEXT] = COMBO_ACTION(kslsh_combo)
+    [JL_RPRN] = COMBO(jl_combo, KC_RPRN)
 };
 
-void process_combo_event(uint16_t combo_index, bool pressed) {
-    switch (combo_index) {
-        case KCOMM_DESCRIBE:
-            if (pressed) {
-                SEND_STRING("kubectl describe");
-            }
-            break;
-        case KH_CONFIG:
-            if (pressed) {
-                SEND_STRING("kubectl config");
-            }
-            break;
-        case KSLSH_CONTEXT:
-            if (pressed) {
-                SEND_STRING("kubectl config current-context");
-            }
-            break;
-    }
-}
-
 bool is_game_active = false;
+bool is_rsthd_active = false;
 
 bool is_alt_tab_active = false;
 uint16_t alt_tab_timer = 0;
@@ -130,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * | GMAIL | GUI/A| Alt/R|Ctrl/S|LSft/T|   G  |                              |   M  |LSft/N|Ctrl/E| Alt/I| GUI/O |  Slck  |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | MSNGR |   Z  |ALGR/X|   C  |   D  |   V  | Dscrd| GAME |  |  XXX |XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  Outlk  |
+ * | MSNGR |   Z  |ALGR/X|   C  |   D  |   V  | Dscrd| GAME |   | RSTHD|XXXXXX|   K  |   H  | ,  < |ALGR.>| /  ? |  Outlk  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        | GUI  | Esc  | Space| Tab  | XXX  |  | XXXXX| Enter| Bksp |Delete| Mute |
  *                        |      | Media| Nav  |      | XXXXX|  | XXXXX| Sym  | Num |  Fn  |      |
@@ -139,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DHM] = LAYOUT(
       TD(TD_CHRM_FFX), KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_QUOT, CALC,
       GMAIL, MT(MOD_LGUI,KC_A), MT(MOD_LALT, KC_R), MT(MOD_LCTL, KC_S), MT(MOD_LSFT, KC_T), KC_G, KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_E), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), SLCK,
-      MSNGR, TD(TD_Z_EMOJI), MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, DSCRD, GAME, KC_NO, KC_NO, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, OUTLK,
+      MSNGR, TD(TD_Z_EMOJI), MT(MOD_RALT, KC_X), KC_C, KC_D, KC_V, DSCRD, GAME, KC_NO, RSTHD, KC_K, KC_H, KC_COMM, MT(MOD_RALT, KC_DOT), KC_SLSH, OUTLK,
       KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_SPC), KC_TAB, KC_NO, KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_BSPC), LT(_FUNC, KC_DEL), KC_MUTE
     ),
 
@@ -161,6 +134,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       MO(_NAV), KC_LSFT, KC_A, KC_S,    KC_D,    KC_F,                                       KC_G, KC_H, KC_J, KC_K, KC_L, _______,
       _______,  KC_LCTL, KC_Z, KC_X,    KC_C,    KC_V,   _______, CMAKDH,  _______, _______, KC_B, KC_N, KC_M, KC_COMM, KC_P, _______,
                               KC_LGUI, KC_LALT, KC_SPC,  MO(_NUMT), KC_ESC, KC_ENT, KC_BSPC, MO(_SYM), KC_SLSH, KC_MUTE
+    ),
+
+/*
+ * Alternative layer: RSTHD
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |Chrm/Ffx|   J  |   C  |   Y  |   F  |   K  |                              |   Z  |   L  |  , < |   U  |   Q  |  Calc  |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * | GMAIL | GUI/R| Alt/S|Ctrl/T|LSft/H|   D   |                              |   M  |LSft/N|Ctrl/A| Alt/I| GUI/O|  Slck  |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * | MSNGR |  / ? |ALGR/V |   G  |   P  |   B  | Dscrd| XXXX |  | CMAKDH|XXXXXX|  X  |   W  | .  > |ALGR;:| -  _ |  Outlk |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        | GUI  | Esc  |   E  | Bksp | Tab  |  | XXXXX| Enter|Space|Delete| Mute |
+ *                        |      | Media| Nav  |      |      |  | XXXXX| Sym  | Num |  Fn  |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+
+    [_RSTHD] = LAYOUT(
+      TD(TD_CHRM_FFX), KC_J, KC_C, KC_Y, KC_F, KC_K,        KC_Z, KC_L, KC_COMM, KC_U, KC_Q, CALC,
+      GMAIL, MT(MOD_LGUI,KC_R), MT(MOD_LALT, KC_S), MT(MOD_LCTL, KC_T), MT(MOD_LSFT, KC_H), KC_D,       KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_A), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), SLCK,
+      MSNGR, KC_SLSH, MT(MOD_RALT, KC_V), KC_G, KC_P, KC_B, DSCRD, KC_NO,      CMAKDH, KC_NO, KC_X, KC_W, KC_DOT, MT(MOD_RALT, KC_SCLN), KC_MINS, OUTLK,
+                                 KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_E), KC_BSPC, KC_TAB,       KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_SPC), LT(_FUNC, KC_DEL), KC_MUTE
     ),
 
 /*
@@ -346,7 +341,11 @@ static void render_status(void) {
         case _COLEMAK_DHM:
             if (is_game_active) {
                 oled_write_P(PSTR("Game\n"), false);
-            } else {
+            } 
+            else if (is_rsthd_active) {
+                oled_write_P(PSTR("RSTHD\n"), false);
+            }
+            else {
                 oled_write_P(PSTR("Colemak-DHm\n"), false);
             }
             break;
@@ -388,10 +387,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 is_game_active = true;
             }
             return false;
+        case RSTHD:
+            if (record->event.pressed) {
+                set_single_persistent_default_layer(_RSTHD);
+                is_rsthd_active = true;
+            }
+            return false;
         case CMAKDH:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_COLEMAK_DHM);
                 is_game_active = false;
+                is_rsthd_active = false;
             }
             return false;
         case DSCRD:
