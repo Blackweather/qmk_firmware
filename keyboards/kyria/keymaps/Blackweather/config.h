@@ -65,4 +65,4 @@
 // enable rapid switch from tap to hold, disables tap hold auto-repeat
 #define TAPPING_FORCE_HOLD
 
-#define COMBO_COUNT 5
+#define COMBO_COUNT 2
