@@ -20,7 +20,6 @@ enum layers {
     _GAME,
     _RSTHD,
     _NAV,
-    _MOUSE,
     _MEDIA,
     _NUM,
     _NUMT,
@@ -146,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * | MSNGR |  / ? |ALGR/V |   G  |   P  |   B  | Dscrd| XXXX |  | CMAKDH|XXXXXX|  X  |   W  | .  > |ALGR;:| -  _ |  Outlk |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        | GUI  | Esc  |   E  | Bksp | Tab  |  | XXXXX| Enter|Space|Delete| Mute |
+ *                        | GUI  |Delete|Space | Tab  | Esc  |  | XXXXX| Enter|  E  |  Bksp| Mute |
  *                        |      | Media| Nav  |      |      |  | XXXXX| Sym  | Num |  Fn  |      |
  *                        `----------------------------------'  `----------------------------------'
  */
@@ -155,7 +154,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       TD(TD_CHRM_FFX), KC_J, KC_C, KC_Y, KC_F, KC_K,        KC_Z, KC_L, KC_COMM, KC_U, KC_Q, CALC,
       GMAIL, MT(MOD_LGUI,KC_R), MT(MOD_LALT, KC_S), MT(MOD_LCTL, KC_T), MT(MOD_LSFT, KC_H), KC_D,       KC_M, MT(MOD_RSFT, KC_N), MT(MOD_RCTL, KC_A), MT(MOD_LALT, KC_I), MT(MOD_RGUI, KC_O), SLCK,
       MSNGR, KC_SLSH, MT(MOD_RALT, KC_V), KC_G, KC_P, KC_B, DSCRD, KC_NO,      CMAKDH, KC_NO, KC_X, KC_W, KC_DOT, MT(MOD_RALT, KC_SCLN), KC_MINS, OUTLK,
-                                 KC_LGUI, LT(_MEDIA, KC_ESC), LT(_NAV, KC_E), KC_BSPC, KC_TAB,       KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_SPC), LT(_FUNC, KC_DEL), KC_MUTE
+                                 KC_LGUI, LT(_MEDIA, KC_DEL), LT(_NAV, KC_SPC), KC_TAB, KC_ESC,       KC_NO, LT(_SYM, KC_ENT), LT(_NUM, KC_E), LT(_FUNC, KC_BSPC), KC_MUTE
     ),
 
 /*
